@@ -1,0 +1,34 @@
+Rivers:
+
+To implement rivers, I implemented an L system and used signed distance functions to carve out the
+river bed. The L system grammar I ended up deciding on is to randomly sample from "FF", "F[-F]",
+and "F[+F]" to substitute for F each time. I biased the probabilities so that the "FF" choice is
+sampled the majority of time while the branching left/right only happens once in a while.
+
+I also implemented the following turtling system. For each F symbol, I would have a chance to have a
+curved segment with a small angle theta. Then I would move forward n times incrementing my angle by
+theta each time. Therefore, if a curved segment was selected, the n forward steps would show a bend
+rather than just a turn. I traced my path using a position object that acted similarly to
+
+To generate the rivers, I only chose a single starting point to only generate a single river. I did
+this because I did not have enough time to implement a system where rivers are generated in blocktype
+worker threads or a system that allowed for rivers to generate into unloaded chunks. Although to do
+this, I would have a map of vectors whose keys are chunk keys. Each of these vectors would contain
+'edit' objects that represent a setBlockAt call into an unloaded/unintialized chunk. At the end of
+building a new chunk in blocktypework, I would look at the map to see if the vector contains any data
+and execute any changes. This would theoretically allow us to generate rivers into unloaded chunks.
+I would also have a very sparse amount of newly initialized chunks to be rivers with the river angle
+point towards uninitialized chunks. This is not a perfect way to generate rivers because there is a
+posibility that the new rivers could point back onto initialized chunks and edit already generated chunks.
+
+To carve the river, I first needed to generate a bounding box to know which blocks to check for the
+SDF function. This ended up being the most problematic part. I ended up rasterizing a rectangle formed
+by the two endpoints of a segment and with a certain width. My rasterization is not entirely correct
+which is what I believe causes errors in some of the excavation. Then to shape the river, I used the
+SDF technique as explained in class.
+
+To smooth the terrain around the river, I got the distance of the water level blocks and then counted
+upwards until I reached an empty block. I then did the distance divided by a constant to get a value
+between 0-1 that is larger when the distance is closer and smaller. I then took that value an
+multiplied it by the height value that was calculated by counting blocks upwards until an empty block.
+Then I removed any blocks between the new ymax and the previous maximum Y value. This worked well.

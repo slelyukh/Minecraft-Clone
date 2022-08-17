@@ -1,6 +1,6 @@
 # Minecraft-Clone
  
- ![MC pic1](https://user-images.githubusercontent.com/76859592/185042467-19a73c12-350d-416f-8b56-8931cb7eeaf6.jpg)
+![MC pic1 (2)](https://user-images.githubusercontent.com/76859592/185042622-7f58d18d-ff80-4c58-8235-b309a13f9720.jpg)
 
  
  ## Feature README Links ##
